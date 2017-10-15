@@ -104,21 +104,53 @@ class Board(object):
         return True
 
     # Cycle through cells until solved
-    def solve(self, guessed_index = None, poss_values = None):
-        while self.is_solved() == False:
+    # def solve(self, guessed_index = None, poss_values = None):
+    #     while self.is_solved() == False:
+    #         initial_count = self.poss_total()
+    #         self.check_all_cells()
+    #         final_count = self.poss_total()
+    #         print(self.is_broken())
+    #         if self.is_broken():
+    #             print("In broken loop")
+    #             print(poss_values)
+    #             self.remove_first_value(poss_values)
+    #             print(poss_values)
+    #             self.cells[guessed_index].poss = poss_values
+    #             print(self.cells[guessed_index].poss)
+    #             self.solve()
+    #         if self.is_stuck(final_count, initial_count) == True:
+    #             poss_values = self.first_unsolved()[0].poss
+    #             print("In stuck loop")
+    #             print(poss_values)
+    #             guessed_index = self.first_unsolved()[1]
+    #             self.sub_first_value(self.first_unsolved()[0])
+    #             self.solve(guessed_index, poss_values)
+    #     self.display_board()
+    def solve(self):
+        if self.is_solved() == True:
+            self.display_board()
+            return
+        initial_count = None
+        final_count = None
+        until initial_count != final_count
             initial_count = self.poss_total()
             self.check_all_cells()
             final_count = self.poss_total()
-            if self.is_broken():
-                self.remove_first_value(poss_values)
-                self.cells[guessed_index].poss = poss_values
-                self.solve()
-            if self.is_stuck(final_count, initial_count) == True:
-                poss_values = self.first_unsolved()[0].poss
-                guessed_index = self.first_unsolved()[1]
-                self.sub_first_value(self.first_unsolved()[0])
-                self.solve(guessed_index, poss_values)
-        self.display_board()
+        print(self.is_broken())
+        if self.is_broken():
+            print("In broken loop")
+            print(poss_values)
+            self.remove_first_value(poss_values)
+            print(poss_values)
+            self.cells[guessed_index].poss = poss_values
+            print(self.cells[guessed_index].poss)
+        if self.is_stuck(final_count, initial_count) == True:
+            poss_values = self.first_unsolved()[0].poss
+            print("In stuck loop")
+            print(poss_values)
+            guessed_index = self.first_unsolved()[1]
+            self.sub_first_value(self.first_unsolved()[0])
+            self.solve(guessed_index, poss_values)
 
     # Get total number of possible values
     def poss_total(self):
