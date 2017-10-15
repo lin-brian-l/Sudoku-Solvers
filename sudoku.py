@@ -1,4 +1,10 @@
-board_string = "1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43--2-5-16--3-89--"
+# board_string = "1-58-2----9--764-52--4--819-19--73-6762-83-9-----61-5---76---3-43--2-5-16--3-89--"
+# board_string = "--5-3--819-285--6-6----4-5---74-283-34976---5--83--49-15--87--2-9----6---26-495-3"
+# board_string = "29-5----77-----4----4738-129-2--3-648---5--7-5---672--3-9--4--5----8-7---87--51-9"
+# board_string = "-8--2-----4-5--32--2-3-9-466---9---4---64-5-1134-5-7--36---4--24-723-6-----7--45-"
+# board_string = "6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--"
+# board_string = "---6891--8------2915------84-3----5-2----5----9-24-8-1-847--91-5------6--6-41----"
+board_string = "-3-5--8-45-42---1---8--9---79-8-61-3-----54---5------78-----7-2---7-46--61-3--5--"
 
 def subtract_lists(a, b):
     for x in b:
@@ -79,11 +85,74 @@ class Board(object):
             if len(cells[i].poss) > 1:
                 subtract_lists(cells[i].poss, knowns)
 
-    # Subtract all knowns for a cell
+    # Subtract all knowns from poss for a cell
     def remove_all_knowns(self, cell):
         self.remove_knowns_from_poss_col(cell.col)
         self.remove_knowns_from_poss_grid(cell.grid)
         self.remove_knowns_from_poss_row(cell.row)
+
+    # Cycle through cells and remove all knowns from all poss
+    def check_all_cells(self):
+        for i in range(0, len(self.cells)):
+            self.remove_all_knowns(self.cells[i])
+
+    # Check whether board is solved
+    def is_solved(self):
+        for i in range(0, len(self.cells)):
+            if len(self.cells[i].poss) > 1:
+                return False
+        return True
+
+    # Cycle through cells until solved
+    def solve(self, guessed_index = None, poss_values = None):
+        while self.is_solved() == False:
+            initial_count = self.poss_total()
+            self.check_all_cells()
+            final_count = self.poss_total()
+            if self.is_broken():
+                self.remove_first_value(poss_values)
+                self.cells[guessed_index].poss = poss_values
+                self.solve()
+            if self.is_stuck(final_count, initial_count) == True:
+                poss_values = self.first_unsolved()[0].poss
+                guessed_index = self.first_unsolved()[1]
+                self.sub_first_value(self.first_unsolved()[0])
+                self.solve(guessed_index, poss_values)
+        self.display_board()
+
+    # Get total number of possible values
+    def poss_total(self):
+        total = 0
+        for i in range(0, len(self.cells)):
+            total += len(self.cells[i].poss)
+        return total
+
+    # Check if stuck based on total number of possible values
+    def is_stuck(self, final, initial):
+        if final == initial:
+            return True
+        return False
+
+    # Find first unsovled cell
+    def first_unsolved(self):
+        for i in range(0, len(self.cells)):
+            if len(self.cells[i].poss) > 1:
+                return [self.cells[i], i]
+
+    # Substitute first value for unsolved cell
+    def sub_first_value(self, cell):
+        cell.poss = [cell.poss[0]]
+
+    # Check whether puzzle is broken
+    def is_broken(self):
+        for i in range(0, len(self.cells)):
+            if len(self.cells[i].poss) == 0:
+                return True
+        return False
+
+    # Removes first value for unsolved cell
+    def remove_first_value(self, poss_values):
+        del poss_values[0]
 
     # Print entire board
     def display_board(self):
@@ -141,7 +210,7 @@ for i in range(0,len(board_string)):
 
 board = Board(cells)
 
-print(board)
+# print(board)
 # print(len(board.cells))
 # print(board.cells[4].poss)
 # # board.remove_knowns_from_poss_col(4)
@@ -154,9 +223,17 @@ print(board)
 # # board.remove_knowns_from_poss_grid(1)
 # board.remove_all_knowns(board.cells[4])
 # print(board.cells[4].poss)
-board.display_board()
-
-
-
-
-
+# board.display_board()
+# board.display_board()
+# board.check_all_cells()
+# board.display_board()
+# board.check_all_cells()
+# board.display_board()
+# board.check_all_cells()
+# board.display_board()
+# print(board.cells[1].poss)
+# print(board.cells[7].poss)
+# print(board.cells[8].poss)
+board.solve()
+# print(board.first_unsolved().poss)
+# print(board.sub_first_value(board.first_unsolved()).poss)
