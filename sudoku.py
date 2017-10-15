@@ -6,13 +6,13 @@
 # board_string = "---6891--8------2915------84-3----5-2----5----9-24-8-1-847--91-5------6--6-41----"
 # board_string = "-3-5--8-45-42---1---8--9---79-8-61-3-----54---5------78-----7-2---7-46--61-3--5--"
 # board_string = "-96-4---11---6---45-481-39---795--43-3--8----4-5-23-18-1-63--59-59-7-83---359---7"
-# board_string = "----754----------8-8-19----3----1-6--------34----6817-2-4---6-39------2-53-2-----" ####
-board_string = "3---------5-7-3--8----28-7-7------43-----------39-41-54--3--8--1---4----968---2--"
+# board_string = "----754----------8-8-19----3----1-6--------34----6817-2-4---6-39------2-53-2-----"
+# board_string = "3---------5-7-3--8----28-7-7------43-----------39-41-54--3--8--1---4----968---2--"
 # board_string = "3-26-9--55--73----------9-----94----------1-9----57-6---85----6--------3-19-82-4-"
-# board_string = "-2-5----48-5--------48-9-2------5-73-9-----6-25-9------3-6-18--------4-71----4-9-" ####
+# board_string = "-2-5----48-5--------48-9-2------5-73-9-----6-25-9------3-6-18--------4-71----4-9-"
 # board_string = "--7--8------2---6-65--79----7----3-5-83---67-2-1----8----71--38-2---5------4--2--" ####
 # board_string = "----------2-65-------18--4--9----6-4-3---57-------------------73------9----------" ####
-# board_string = "---------------------------------------------------------------------------------" ####
+board_string = "---------------------------------------------------------------------------------" ####
 
 import copy
 
@@ -109,7 +109,7 @@ class Board(object):
     # Check whether board is solved
     def is_solved(self):
         for i in range(0, len(self.cells)):
-            if len(self.cells[i].poss) > 1:
+            if len(self.cells[i].poss) != 1:
                 return False
         return True
 
@@ -128,9 +128,10 @@ class Board(object):
         if self.is_solved() == True:
             self.display_board()
             return True
-        print("Broken?")
-        print(self.is_broken())
+        print "Broken?", self.is_broken()
+        print "This is the broken board: ", self.display_board()
         if self.is_broken():
+            print("Am I here?")
             return False
         print "this is the self:               ", self.display_board()
         dupe = copy.deepcopy(self)
@@ -140,8 +141,11 @@ class Board(object):
         self.dupe.sub_first_value(self.dupe.first_unsolved())
         print "this is the self after editing:       ", self.display_board()
         print "this is the dupe after editing:       ", self.dupe.display_board()
-        if self.dupe.solve() == False:
-            # print("i should be getting run")
+        need_to_sub = self.dupe.solve()
+        print("Am I being hit?")
+        print(need_to_sub)
+        if need_to_sub == False or need_to_sub == None:
+            print("i should be getting run since the board is broken")
             print "self looks like this: ", self.display_board()
             self.remove_first_value(self.first_unsolved())
             print "self after removing the first value: ", self.display_board()
