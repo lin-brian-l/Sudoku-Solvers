@@ -4,7 +4,17 @@
 # board_string = "-8--2-----4-5--32--2-3-9-466---9---4---64-5-1134-5-7--36---4--24-723-6-----7--45-"
 # board_string = "6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--"
 # board_string = "---6891--8------2915------84-3----5-2----5----9-24-8-1-847--91-5------6--6-41----"
-board_string = "-3-5--8-45-42---1---8--9---79-8-61-3-----54---5------78-----7-2---7-46--61-3--5--"
+# board_string = "-3-5--8-45-42---1---8--9---79-8-61-3-----54---5------78-----7-2---7-46--61-3--5--"
+# board_string = "-96-4---11---6---45-481-39---795--43-3--8----4-5-23-18-1-63--59-59-7-83---359---7"
+# board_string = "----754----------8-8-19----3----1-6--------34----6817-2-4---6-39------2-53-2-----" ####
+board_string = "3---------5-7-3--8----28-7-7------43-----------39-41-54--3--8--1---4----968---2--"
+# board_string = "3-26-9--55--73----------9-----94----------1-9----57-6---85----6--------3-19-82-4-"
+# board_string = "-2-5----48-5--------48-9-2------5-73-9-----6-25-9------3-6-18--------4-71----4-9-" ####
+# board_string = "--7--8------2---6-65--79----7----3-5-83---67-2-1----8----71--38-2---5------4--2--" ####
+# board_string = "----------2-65-------18--4--9----6-4-3---57-------------------73------9----------" ####
+# board_string = "---------------------------------------------------------------------------------" ####
+
+import copy
 
 def subtract_lists(a, b):
     for x in b:
@@ -25,9 +35,9 @@ class Cell(object):
 
 # Board class with many cells
 class Board(object):
-    def __init__(self, cells):
+    def __init__(self, cells, dupe = None):
         self.cells = cells
-        self.cells = cells
+        self.dupe = dupe
 
     # Find all cells in the same row
     def cells_in_row(self, row):
@@ -104,53 +114,41 @@ class Board(object):
         return True
 
     # Cycle through cells until solved
-    # def solve(self, guessed_index = None, poss_values = None):
-    #     while self.is_solved() == False:
-    #         initial_count = self.poss_total()
-    #         self.check_all_cells()
-    #         final_count = self.poss_total()
-    #         print(self.is_broken())
-    #         if self.is_broken():
-    #             print("In broken loop")
-    #             print(poss_values)
-    #             self.remove_first_value(poss_values)
-    #             print(poss_values)
-    #             self.cells[guessed_index].poss = poss_values
-    #             print(self.cells[guessed_index].poss)
-    #             self.solve()
-    #         if self.is_stuck(final_count, initial_count) == True:
-    #             poss_values = self.first_unsolved()[0].poss
-    #             print("In stuck loop")
-    #             print(poss_values)
-    #             guessed_index = self.first_unsolved()[1]
-    #             self.sub_first_value(self.first_unsolved()[0])
-    #             self.solve(guessed_index, poss_values)
-    #     self.display_board()
     def solve(self):
-        if self.is_solved() == True:
-            self.display_board()
-            return
         initial_count = None
-        final_count = None
-        until initial_count != final_count
+        final_count = False
+        print "before the board reaches stuck tests: ", self.display_board()
+        while self.is_stuck(final_count, initial_count) == False:
             initial_count = self.poss_total()
             self.check_all_cells()
             final_count = self.poss_total()
+            print("Trying logic to see if it's stuck")
+            print(self.is_stuck(final_count, initial_count))
+        print "after the board gets stuck: ", self.display_board()
+        if self.is_solved() == True:
+            self.display_board()
+            return True
+        print("Broken?")
         print(self.is_broken())
         if self.is_broken():
-            print("In broken loop")
-            print(poss_values)
-            self.remove_first_value(poss_values)
-            print(poss_values)
-            self.cells[guessed_index].poss = poss_values
-            print(self.cells[guessed_index].poss)
-        if self.is_stuck(final_count, initial_count) == True:
-            poss_values = self.first_unsolved()[0].poss
-            print("In stuck loop")
-            print(poss_values)
-            guessed_index = self.first_unsolved()[1]
-            self.sub_first_value(self.first_unsolved()[0])
-            self.solve(guessed_index, poss_values)
+            return False
+        print "this is the self:               ", self.display_board()
+        dupe = copy.deepcopy(self)
+        print "this is the dupe after copying: ", dupe.display_board()
+        self.dupe = dupe
+        print "this is the dupe after cloning: ", self.dupe.display_board()
+        self.dupe.sub_first_value(self.dupe.first_unsolved())
+        print "this is the self after editing:       ", self.display_board()
+        print "this is the dupe after editing:       ", self.dupe.display_board()
+        if self.dupe.solve() == False:
+            # print("i should be getting run")
+            print "self looks like this: ", self.display_board()
+            self.remove_first_value(self.first_unsolved())
+            print "self after removing the first value: ", self.display_board()
+            dupe = copy.deepcopy(self)
+            self.dupe = dupe
+            print "self.dupe after assign :             ", self.dupe.display_board()
+            self.dupe.solve()
 
     # Get total number of possible values
     def poss_total(self):
@@ -169,7 +167,7 @@ class Board(object):
     def first_unsolved(self):
         for i in range(0, len(self.cells)):
             if len(self.cells[i].poss) > 1:
-                return [self.cells[i], i]
+                return self.cells[i]
 
     # Substitute first value for unsolved cell
     def sub_first_value(self, cell):
@@ -183,8 +181,8 @@ class Board(object):
         return False
 
     # Removes first value for unsolved cell
-    def remove_first_value(self, poss_values):
-        del poss_values[0]
+    def remove_first_value(self, cell):
+        del cell.poss[0]
 
     # Print entire board
     def display_board(self):
@@ -202,10 +200,11 @@ class Board(object):
         row_list = []
         cells = self.cells_in_row(row)
         for i in range(0, len(cells)):
-            if len(cells[i].poss) == 1:
-                row_list.append(cells[i].poss[0])
-            else:
-                row_list.append("-")
+            row_list.append(cells[i].poss)
+            # if len(cells[i].poss) == 1:
+            #     row_list.append(cells[i].poss[0])
+            # else:
+            #     row_list.append("-")
         return row_list
 
 # Method to find cell's row based on index
