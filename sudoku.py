@@ -9,10 +9,10 @@
 # board_string = "----754----------8-8-19----3----1-6--------34----6817-2-4---6-39------2-53-2-----"
 # board_string = "3---------5-7-3--8----28-7-7------43-----------39-41-54--3--8--1---4----968---2--"
 # board_string = "3-26-9--55--73----------9-----94----------1-9----57-6---85----6--------3-19-82-4-"
-# board_string = "-2-5----48-5--------48-9-2------5-73-9-----6-25-9------3-6-18--------4-71----4-9-"
+board_string = "-2-5----48-5--------48-9-2------5-73-9-----6-25-9------3-6-18--------4-71----4-9-"
 # board_string = "--7--8------2---6-65--79----7----3-5-83---67-2-1----8----71--38-2---5------4--2--" ####
 # board_string = "----------2-65-------18--4--9----6-4-3---57-------------------73------9----------" ####
-board_string = "---------------------------------------------------------------------------------" ####
+# board_string = "---------------------------------------------------------------------------------" ####
 
 import copy
 
@@ -117,42 +117,48 @@ class Board(object):
     def solve(self):
         initial_count = None
         final_count = False
-        print "before the board reaches stuck tests: ", self.display_board()
+        # print "before the board reaches stuck tests: ", self.display_board()
         while self.is_stuck(final_count, initial_count) == False:
             initial_count = self.poss_total()
             self.check_all_cells()
             final_count = self.poss_total()
-            print("Trying logic to see if it's stuck")
-            print(self.is_stuck(final_count, initial_count))
-        print "after the board gets stuck: ", self.display_board()
+            # print("Trying logic to see if it's stuck")
+            # print(self.is_stuck(final_count, initial_count))
+        # print "after the board gets stuck: ", self.display_board()
         if self.is_solved() == True:
-            self.display_board()
+            # self.display_board()
             return True
-        print "Broken?", self.is_broken()
-        print "This is the broken board: ", self.display_board()
+        # print "Broken?", self.is_broken()
+        # print "This is the broken board: ", self.display_board()
         if self.is_broken():
-            print("Am I here?")
+            # print("Am I here?")
             return False
-        print "this is the self:               ", self.display_board()
+        # print "this is the self:               ", self.display_board()
         dupe = copy.deepcopy(self)
-        print "this is the dupe after copying: ", dupe.display_board()
+        # print "this is the dupe after copying: ", dupe.display_board()
         self.dupe = dupe
-        print "this is the dupe after cloning: ", self.dupe.display_board()
+        # print "this is the dupe after cloning: ", self.dupe.display_board()
         self.dupe.sub_first_value(self.dupe.first_unsolved())
-        print "this is the self after editing:       ", self.display_board()
-        print "this is the dupe after editing:       ", self.dupe.display_board()
+        # print "this is the self after editing:       ", self.display_board()
+        # print "this is the dupe after editing:       ", self.dupe.display_board()
         need_to_sub = self.dupe.solve()
-        print("Am I being hit?")
-        print(need_to_sub)
+        # print("Am I being hit?")
+        # print(need_to_sub)
         if need_to_sub == False or need_to_sub == None:
-            print("i should be getting run since the board is broken")
-            print "self looks like this: ", self.display_board()
+            # print("i should be getting run since the board is broken")
+            # print "self looks like this: ", self.display_board()
             self.remove_first_value(self.first_unsolved())
-            print "self after removing the first value: ", self.display_board()
+            # print "self after removing the first value: ", self.display_board()
             dupe = copy.deepcopy(self)
             self.dupe = dupe
-            print "self.dupe after assign :             ", self.dupe.display_board()
+            # print "self.dupe after assign :             ", self.dupe.display_board()
             self.dupe.solve()
+        # else:
+            # self.display_board()
+    def get_solved_board(self):
+        while self.is_solved() == False:
+            self.solve()
+        self.display_board()
 
     # Get total number of possible values
     def poss_total(self):
@@ -269,6 +275,7 @@ board = Board(cells)
 # print(board.cells[1].poss)
 # print(board.cells[7].poss)
 # print(board.cells[8].poss)
-board.solve()
+# board.solve()
 # print(board.first_unsolved().poss)
 # print(board.sub_first_value(board.first_unsolved()).poss)
+board.get_solved_board()
