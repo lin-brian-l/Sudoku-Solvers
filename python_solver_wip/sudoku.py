@@ -126,7 +126,7 @@ class Board(object):
             # print(self.is_stuck(final_count, initial_count))
         # print "after the board gets stuck: ", self.display_board()
         if self.is_solved() == True:
-            # self.display_board()
+            self.display_board()
             return True
         # print "Broken?", self.is_broken()
         # print "This is the broken board: ", self.display_board()
