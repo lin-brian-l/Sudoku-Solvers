@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sudoku</title>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="../index.js"></script>
+	<script src="../bundle.js"></script>
+	<script>
+		const Board = require('Board');
+	</script>
+</head>
+<body>
+	<h1>Sudoku Solver</h1>
+	<div class="container">
+		<span>Type in the numbers for the sudoku board. Use "-" or " " for blank cells.</span>
+		<br><br>
+		<input class="board-input" maxlength="81" type="text">
+		<button id="input-button" type='button'>Use Input</button>
+	</div>
+	<!-- <div id='time-container' class="container"></div> -->
+	<div class="board-container">
+		<div class="board"></div>
+	</div>
+	<div class="container">
+		<input class="checkbox" type="checkbox" value='row'>Eliminate known values in rows.<br>
+		<input class="checkbox" type="checkbox" value='column'>Eliminate known values in columns.<br>
+		<input class="checkbox" type="checkbox" value='grid'>Eliminate known values in grids.<br>
+		<input class="checkbox" type="checkbox" value='checkRepeatingOption'>Check if there are repeated values.<br>
+	</div>
+	<div class="button-container">
+		<button id="solve-button" type="button">Solve</button>
+	</div>
+</body>
+</html>

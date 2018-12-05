@@ -1,0 +1,17 @@
+{
+  "name": "js-sudoku",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/lin-brian-l/js-sudoku.git",
+  "author": "lin-brian-l <lin.brian.l@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "yarn": "^1.7.0"
+  }
+}
