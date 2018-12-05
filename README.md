@@ -1,0 +1,1 @@
+This repository contains different (unfinished) Sudoku Solvers written in various languages. Currently, there are solvers written in Python, Ruby, and Javascript (complete with an HTML interface and testing). 
